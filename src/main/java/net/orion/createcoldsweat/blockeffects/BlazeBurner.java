@@ -17,26 +17,24 @@ public class BlazeBurner extends BlockTemp {
         super(AllBlocks.BLAZE_BURNER.get());
     }
 
+    private static final
+
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
         if (Config.CONFIG.blazeBurnerTemperature.get() && this.hasBlock(blockState.getBlock())){
             if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SMOULDERING))
-                return blend(distance, Config.CONFIG.bBSmouldering.get());
+                return blazeBlend(distance, Config.CONFIG.bBSmouldering.get());
             else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.FADING))
-                return blend(distance, Config.CONFIG.bBFading.get());
+                return blazeBlend(distance, Config.CONFIG.bBFading.get());
             else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.KINDLED))
-                return blend(distance, Config.CONFIG.bBKindled.get());
+                return blazeBlend(distance, Config.CONFIG.bBKindled.get());
             else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SEETHING))
-                return blend(distance, Config.CONFIG.bBSeething.get());
+                return blazeBlend(distance, Config.CONFIG.bBSeething.get());
         }
         return 0f;
     }
 
     private boolean isHeatLevel(BlockState blockState, BlazeBurnerBlock.HeatLevel heatLevel) {
         return (blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) == heatLevel);
-    }
-
-    private double blend(double distance, double temperature) {
-        return CSMath.blend(temperature, 0, distance, 0.5, 3);
     }
 }
