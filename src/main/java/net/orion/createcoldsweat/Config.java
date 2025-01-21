@@ -19,6 +19,10 @@ public class Config {
     public final ForgeConfigSpec.DoubleValue bBSeething;
 
     public final ForgeConfigSpec.BooleanValue boilerTemperature;
+    public final ForgeConfigSpec.DoubleValue boilerTemperatureIncrement;
+
+    public final ForgeConfigSpec.BooleanValue lavaTemperature;
+    public final ForgeConfigSpec.DoubleValue lavaTemperatureIncrement;
 
     public Config(ForgeConfigSpec.Builder builder) {
         builder.comment("General settings for YourMod")
@@ -43,6 +47,18 @@ public class Config {
         boilerTemperature = builder
                 .comment("Should Boilers apply heat?")
                 .define("Boiler", true);
+
+        boilerTemperatureIncrement = builder
+                .comment("The amount of MC UNITS to increase per heat level (max heat level is 18)")
+                .defineInRange("Boiler Increment", 0.04768717215d, 0d, 1d);
+
+        lavaTemperature = builder
+                .comment("Should Lava apply heat while in containers?")
+                .define("Lava", true);
+
+        lavaTemperatureIncrement = builder
+                .comment("The temperature that 1 bucket of lava should apply (MC UNITS)")
+                .defineInRange("Lava Temperature per bucket", 0.4d, 0d, 1d);
 
         builder.pop();
     }

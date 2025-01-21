@@ -1,7 +1,6 @@
 package net.orion.createcoldsweat.blockeffects;
 
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
-import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import net.minecraft.core.BlockPos;
@@ -24,17 +23,17 @@ public class BlazeBurner extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (Config.CONFIG.blazeBurnerTemperature.get() && this.hasBlock(blockState.getBlock())){
-            if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SMOULDERING))
-                return blazeBlend.apply(distance, Config.CONFIG.bBSmouldering.get());
-            else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.FADING))
-                return blazeBlend.apply(distance, Config.CONFIG.bBFading.get());
-            else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.KINDLED))
-                return blazeBlend.apply(distance, Config.CONFIG.bBKindled.get());
-            else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SEETHING))
-                return blazeBlend.apply(distance, Config.CONFIG.bBSeething.get());
-        }
-        return 0f;
+        if (!Config.CONFIG.blazeBurnerTemperature.get()) return 0d;
+        if (!this.hasBlock(blockState.getBlock())) return 0d;
+        if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SMOULDERING))
+            return blazeBlend.apply(distance, Config.CONFIG.bBSmouldering.get());
+        else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.FADING))
+            return blazeBlend.apply(distance, Config.CONFIG.bBFading.get());
+        else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.KINDLED))
+            return blazeBlend.apply(distance, Config.CONFIG.bBKindled.get());
+        else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SEETHING))
+            return blazeBlend.apply(distance, Config.CONFIG.bBSeething.get());
+        return 0d;
     }
 
     private boolean isHeatLevel(BlockState blockState, BlazeBurnerBlock.HeatLevel heatLevel) {
