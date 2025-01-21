@@ -9,7 +9,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.orion.createcoldsweat.Config;
+import net.orion.createcoldsweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiFunction;
 
 public class BlazeBurner extends BlockTemp {
 
@@ -17,19 +20,19 @@ public class BlazeBurner extends BlockTemp {
         super(AllBlocks.BLAZE_BURNER.get());
     }
 
-    private static final
+    private static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(7);
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
         if (Config.CONFIG.blazeBurnerTemperature.get() && this.hasBlock(blockState.getBlock())){
             if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SMOULDERING))
-                return blazeBlend(distance, Config.CONFIG.bBSmouldering.get());
+                return blazeBlend.apply(distance, Config.CONFIG.bBSmouldering.get());
             else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.FADING))
-                return blazeBlend(distance, Config.CONFIG.bBFading.get());
+                return blazeBlend.apply(distance, Config.CONFIG.bBFading.get());
             else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.KINDLED))
-                return blazeBlend(distance, Config.CONFIG.bBKindled.get());
+                return blazeBlend.apply(distance, Config.CONFIG.bBKindled.get());
             else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SEETHING))
-                return blazeBlend(distance, Config.CONFIG.bBSeething.get());
+                return blazeBlend.apply(distance, Config.CONFIG.bBSeething.get());
         }
         return 0f;
     }
