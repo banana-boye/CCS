@@ -2,11 +2,17 @@ package net.orion.createcoldsweat.blockeffects;
 
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.fluids.pipes.FluidPipeBlockEntity;
+import com.simibubi.create.content.fluids.pipes.GlassFluidPipeBlock;
+import com.simibubi.create.content.fluids.pipes.SmartFluidPipeBlockEntity;
+import com.simibubi.create.content.fluids.pump.PumpBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,10 +31,10 @@ public class LavaContainer extends BlockTemp {
 
     public LavaContainer() {
         super(
-                AllBlocks.FLUID_PIPE.get()
-//                AllBlocks.GLASS_FLUID_PIPE.get(),
-//                AllBlocks.SMART_FLUID_PIPE.get(),
-//                AllBlocks.BASIN.get()
+                AllBlocks.FLUID_PIPE.get(),
+                AllBlocks.SMART_FLUID_PIPE.get(),
+                AllBlocks.GLASS_FLUID_PIPE.get(),
+                AllBlocks.MECHANICAL_PUMP.get()
         );
     }
 
@@ -38,8 +44,11 @@ public class LavaContainer extends BlockTemp {
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (!this.hasBlock(blockState.getBlock()) || blockEntity == null) return 0d;
-        FluidPipeBlockEntity pipeBlockEntity = (FluidPipeBlockEntity) blockEntity;
-        System.out.println("Pipe NBT:" + pipeBlockEntity.getBehaviour(Standard));
+        SmartBlockEntity pipeBlockEntity = (SmartBlockEntity) blockEntity;
+        FluidTransportBehaviour fluidTransportBehaviour = pipeBlockEntity.getBehaviour(FluidTransportBehaviour.TYPE);
+        for (Direction direction: fluidTransportBehaviour.interfaces.keySet()) {
+            if (fluidTransportBehaviour.getProvidedOutwardFluid(direction).containsFluid(HeatUtils.LAVA)) return 1d;
+        }
         return 0d;
     }
 }
