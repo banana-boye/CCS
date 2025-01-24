@@ -12,7 +12,9 @@ import java.util.function.Function;
 public class HeatUtils {
 
     // Comparison value
-    public static final FluidStack LAVA = new FluidStack(Fluids.LAVA, 0);
+    public static final FluidStack LAVA = new FluidStack(Fluids.LAVA, 1);
+
+    public static final BiFunction<Double, Double, Double> lavaBlend = HeatUtils.createBlender(3);
 
     public static BiFunction<Double, Double, Double> createBlender(int maxDistance) {
         return (Double distance, Double temperature) -> blend(distance, temperature, maxDistance);
