@@ -12,7 +12,7 @@ public class BlockTempRegister {
     public void register(BlockTempRegisterEvent blockTempRegisterEvent) {
         blockTempRegisterEvent.register(new BlazeBurner());
         blockTempRegisterEvent.register(new SteamEngine());
-        blockTempRegisterEvent.register(new SteamEngineTank());
+        blockTempRegisterEvent.register(new FluidTank());
         blockTempRegisterEvent.register(new PipesAndPumps());
         blockTempRegisterEvent.register(new FluidContainers());
     }

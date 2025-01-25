@@ -4,8 +4,10 @@ import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.orion.createcoldsweat.Config;
 
+import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -26,8 +28,17 @@ public class HeatUtils {
 
     public static double calculateBoilerTemperature(FluidTankBlockEntity tankBlockEntity, Function<Double, Double> calculateHeat) {
         if (tankBlockEntity == null) return 0d;
+        if (tankBlockEntity.boiler == null) return 0d;
         if (tankBlockEntity.boiler.activeHeat == 0) return 0d;
-        // 0.04768717215 is a singleDegree (Celsius) times 20/18 (18 being the max heat level), effectively, this should make it so the maximum applied temperature is 20 celcius based off heat
         return calculateHeat.apply(Config.CONFIG.boilerTemperatureIncrement.get() * tankBlockEntity.boiler.activeHeat);
+    }
+
+    @Nullable
+    public static FluidStack getFluid(IFluidHandler iFluidHandler, FluidStack toCompare) {
+        for (int i = 0; i < iFluidHandler.getTanks(); i++) {
+            FluidStack tank = iFluidHandler.getFluidInTank(i);
+            if(tank.isFluidEqual(toCompare)) return tank;
+        }
+        return null;
     }
 }

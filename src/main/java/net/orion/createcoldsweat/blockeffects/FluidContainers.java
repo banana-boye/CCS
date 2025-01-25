@@ -1,37 +1,44 @@
 package net.orion.createcoldsweat.blockeffects;
 
+import com.google.common.util.concurrent.AtomicDouble;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.orion.createcoldsweat.Config;
+import net.orion.createcoldsweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidContainers extends BlockTemp {
     public FluidContainers(){
         super(
-                AllBlocks.BASIN.get(),
-                AllBlocks.FLUID_TANK.get()
+                AllBlocks.BASIN.get()
         );
     }
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        SmartBlockEntity blockEntity = (SmartBlockEntity) level.getBlockEntity(blockPos);
-        LazyOptional<IFluidHandler> lazyOptional = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
-        lazyOptional.ifPresent(iFluidHandler -> {
-            System.out.println(iFluidHandler.getFluidInTank(1).getFluid());
-        });
+        if(!Config.CONFIG.lavaTemperature.get()) return 0d;
 
-        return 0;
+        SmartBlockEntity blockEntity = (SmartBlockEntity) level.getBlockEntity(blockPos);
+        if (blockEntity == null) return 0d;
+        AtomicDouble blockTemperature = new AtomicDouble(0d);
+
+        LazyOptional<IFluidHandler> lazyOptional = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
+        lazyOptional.ifPresent(
+            iFluidHandler -> {
+                FluidStack fluidStack = HeatUtils.getFluid(iFluidHandler, HeatUtils.LAVA);
+                if (fluidStack != null) blockTemperature.set(Config.CONFIG.lavaTemperatureIncrement.get() * fluidStack.getAmount() / 1000);
+            }
+        );
+
+        return blockTemperature.get();
     }
 }
