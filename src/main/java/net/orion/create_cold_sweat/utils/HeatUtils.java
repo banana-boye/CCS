@@ -1,11 +1,11 @@
-package net.orion.createcoldsweat.utils;
+package net.orion.create_cold_sweat.utils;
 
 import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.orion.createcoldsweat.Config;
+import net.orion.create_cold_sweat.Config;
 
 import javax.annotation.Nullable;
 import java.util.function.BiFunction;

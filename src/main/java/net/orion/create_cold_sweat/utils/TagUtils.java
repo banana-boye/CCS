@@ -1,11 +1,11 @@
-package net.orion.createcoldsweat.utils;
+package net.orion.create_cold_sweat.utils;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.orion.createcoldsweat.CreateColdSweat;
+import net.orion.create_cold_sweat.CreateColdSweat;
 
 import java.util.ArrayList;
 import java.util.List;

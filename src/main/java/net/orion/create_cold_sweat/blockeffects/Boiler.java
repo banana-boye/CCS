@@ -1,4 +1,4 @@
-package net.orion.createcoldsweat.blockeffects;
+package net.orion.create_cold_sweat.blockeffects;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
@@ -12,8 +12,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.orion.createcoldsweat.Config;
-import net.orion.createcoldsweat.utils.HeatUtils;
+import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;

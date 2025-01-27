@@ -1,4 +1,4 @@
-package net.orion.createcoldsweat;
+package net.orion.create_cold_sweat;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

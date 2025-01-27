@@ -1,4 +1,4 @@
-package net.orion.createcoldsweat;
+package net.orion.create_cold_sweat;
 
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 @Mod(CreateColdSweat.MODID)
 public class CreateColdSweat
 {
-    public static final String MODID = "createcoldsweat";
+    public static final String MODID = "create_cold_sweat";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateColdSweat () {

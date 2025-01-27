@@ -1,4 +1,4 @@
-package net.orion.createcoldsweat;
+package net.orion.create_cold_sweat;
 
 import com.momosoftworks.coldsweat.api.event.core.registry.BlockTempRegisterEvent;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
@@ -6,8 +6,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.orion.createcoldsweat.blockeffects.*;
-import net.orion.createcoldsweat.utils.TagUtils;
+import net.orion.create_cold_sweat.blockeffects.*;
+import net.orion.create_cold_sweat.utils.TagUtils;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
