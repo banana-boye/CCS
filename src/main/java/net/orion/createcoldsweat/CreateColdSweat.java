@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 public class CreateColdSweat
 {
     public static final String MODID = "createcoldsweat";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateColdSweat () {
         IEventBus FORGE_EVENT_BUS = MinecraftForge.EVENT_BUS;

@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "create:fluid_pipe",
+      "required": false
+    },
+    {
+      "id": "create:glass_fluid_pipe",
+      "required": false
+    },
+    {
+      "id": "create:smart_fluid_pipe",
+      "required": false
+    },
+    {
+      "id": "create:mechanical_pump",
+      "required": false
+    }
+  ]
+}

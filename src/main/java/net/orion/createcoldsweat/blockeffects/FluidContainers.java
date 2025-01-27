@@ -2,11 +2,11 @@ package net.orion.createcoldsweat.blockeffects;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -17,10 +17,8 @@ import net.orion.createcoldsweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidContainers extends BlockTemp {
-    public FluidContainers(){
-        super(
-                AllBlocks.BASIN.get()
-        );
+    public FluidContainers(Block... blocks){
+        super(blocks);
     }
 
     @Override

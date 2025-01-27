@@ -1,11 +1,11 @@
 package net.orion.createcoldsweat.blockeffects;
 
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.orion.createcoldsweat.Config;
 import net.orion.createcoldsweat.utils.HeatUtils;
@@ -15,11 +15,11 @@ import java.util.function.BiFunction;
 
 public class BlazeBurner extends BlockTemp {
 
-    public BlazeBurner(){
-        super(AllBlocks.BLAZE_BURNER.get());
-    }
-
     private static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(7);
+
+    public BlazeBurner(Block... blocks) {
+        super(blocks);
+    }
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {

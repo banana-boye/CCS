@@ -2,11 +2,11 @@ package net.orion.createcoldsweat.blockeffects;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -18,12 +18,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
-public class FluidTank extends BlockTemp {
-    public FluidTank() {
-        super(AllBlocks.FLUID_TANK.get());
-    }
+public class Boiler extends BlockTemp {
 
     private static final BiFunction<Double, Double, Double> boilerBlend = HeatUtils.createBlender(3);
+
+    public Boiler(Block... block) {
+        super(block);
+    }
 
 
     @Override
