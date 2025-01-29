@@ -34,7 +34,7 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="cold_sweat"
     mandatory = true
-    versionRange = "[2.3.10]"
+    versionRange = "[2.3,)"
     ordering = "NONE"
     side="BOTH"
 
