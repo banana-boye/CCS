@@ -1,0 +1,6 @@
+// 1.20.1	2025-02-04T22:55:30.051300943	Tags for minecraft:block mod id create_cold_sweat
+264171f38bc32abc376f19150bd68f7da8e0a915 data/create_cold_sweat/tags/blocks/blaze_burner_block.json
+95c7102fb3c0ecb6d4c60a3ea9abaea8ce44ace9 data/create_cold_sweat/tags/blocks/fluid_container_block.json
+4b9c3975f16b0e54e0bfcee0a3f3e3f6caf5448d data/create_cold_sweat/tags/blocks/fluid_tank_block.json
+d08f96cf4f6ef4205f08987ce52a545569309d99 data/create_cold_sweat/tags/blocks/pipe_block.json
+62267b4ebd9931e80b885eb69ecf90641f51e17f data/create_cold_sweat/tags/blocks/steam_engine_block.json
