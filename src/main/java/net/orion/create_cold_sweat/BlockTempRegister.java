@@ -23,7 +23,7 @@ public class BlockTempRegister {
         registerBlockTemp.accept(TagUtils.STEAM_ENGINE, SteamEngine::new);
         registerBlockTemp.accept(TagUtils.BOILER, Boiler::new);
         registerBlockTemp.accept(TagUtils.PIPES, PipesAndPumps::new);
-        registerBlockTemp.accept(TagUtils.TANKS, FluidContainers::new);
+        registerBlockTemp.accept(TagUtils.FLUID_CONTAINERS, FluidContainers::new);
         CreateColdSweat.LOGGER.info("Registered Create: Cold Sweat BlockEffects");
     }
 

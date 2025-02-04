@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {
-      "id": "create:blaze_burner",
-      "required": false
-    }
-  ]
-}
