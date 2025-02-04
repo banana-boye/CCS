@@ -12,8 +12,8 @@ import java.util.List;
 
 public class TagUtils {
     public static final TagKey<Block> PIPES = blockTag("pipe_block");
-    public static final TagKey<Block> TANKS = blockTag("fluid_container_block");
-    public static final TagKey<Block> BOILER = blockTag("boiler_block");
+    public static final TagKey<Block> FLUID_CONTAINERS = blockTag("fluid_container_block");
+    public static final TagKey<Block> BOILER = blockTag("fluid_tank_block");
     public static final TagKey<Block> STEAM_ENGINE = blockTag("steam_engine_block");
     public static final TagKey<Block> BLAZE_BURNER = blockTag("blaze_burner_block");
 

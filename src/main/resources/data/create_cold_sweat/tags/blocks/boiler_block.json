@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {
-      "id": "create:fluid_tank",
-      "required": false
-    }
-  ]
-}
