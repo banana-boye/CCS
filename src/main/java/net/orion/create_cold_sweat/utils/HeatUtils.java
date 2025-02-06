@@ -2,7 +2,6 @@ package net.orion.create_cold_sweat.utils;
 
 import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.orion.create_cold_sweat.Config;
@@ -13,10 +12,15 @@ import java.util.function.Function;
 
 public class HeatUtils {
 
-    // Comparison value
-    public static final FluidStack LAVA = new FluidStack(Fluids.LAVA, 1);
+    public static final BiFunction<Double, Double, Double> fluidBlend = HeatUtils.createBlender(3);
 
-    public static final BiFunction<Double, Double, Double> lavaBlend = HeatUtils.createBlender(3);
+    public static double getTemperatureFromFluidStack(double distance, FluidStack fluidStack) {
+        int temperature = fluidStack.getFluid().getFluidType().getTemperature();
+        if (temperature == 300) return 0d;
+        int amount = fluidStack.getAmount();
+        double mcuAmounted = ((temperature - 300) * 0.04291845494) * (amount == 1 ? 1000 : amount) / 1000;
+        return fluidBlend.apply(distance, mcuAmounted / Config.CONFIG.defaultFluidDampener.get());
+    }
 
     public static BiFunction<Double, Double, Double> createBlender(int maxDistance) {
         return (Double distance, Double temperature) -> blend(distance, temperature, maxDistance);
@@ -34,10 +38,10 @@ public class HeatUtils {
     }
 
     @Nullable
-    public static FluidStack getFluid(IFluidHandler iFluidHandler, FluidStack toCompare) {
+    public static FluidStack getFluid(IFluidHandler iFluidHandler) {
         for (int i = 0; i < iFluidHandler.getTanks(); i++) {
             FluidStack tank = iFluidHandler.getFluidInTank(i);
-            if(tank.isFluidEqual(toCompare)) return tank;
+            if(!tank.isEmpty()) return tank;
         }
         return null;
     }

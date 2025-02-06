@@ -11,11 +11,12 @@ import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.function.BiFunction;
 
 public class BlazeBurner extends BlockTemp {
 
-    private static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(7);
+    private static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(8);
 
     public BlazeBurner(Block... blocks) {
         super(blocks);
@@ -25,15 +26,18 @@ public class BlazeBurner extends BlockTemp {
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
         if (!Config.CONFIG.blazeBurnerTemperature.get()) return 0d;
         if (!this.hasBlock(blockState.getBlock())) return 0d;
-        if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SMOULDERING))
-            return blazeBlend.apply(distance, Config.CONFIG.bBSmouldering.get());
-        else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.FADING))
-            return blazeBlend.apply(distance, Config.CONFIG.bBFading.get());
-        else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.KINDLED))
-            return blazeBlend.apply(distance, Config.CONFIG.bBKindled.get());
-        else if (isHeatLevel(blockState, BlazeBurnerBlock.HeatLevel.SEETHING))
-            return blazeBlend.apply(distance, Config.CONFIG.bBSeething.get());
-        return 0d;
+
+        return Arrays.stream(BlazeBurnerBlock.HeatLevel.values())
+                .map(hl -> isHeatLevel(blockState, hl) ? blazeBlend.apply(distance, switch (hl) {
+                    case NONE -> 0d;
+                    case SMOULDERING -> Config.CONFIG.bBSmouldering.get();
+                    case FADING -> Config.CONFIG.bBFading.get();
+                    case KINDLED -> Config.CONFIG.bBKindled.get();
+                    case SEETHING -> Config.CONFIG.bBSeething.get();
+                }) : 0d)
+                .filter(t -> t != 0d)
+                .findFirst()
+                .orElse(0d);
     }
 
     private boolean isHeatLevel(BlockState blockState, BlazeBurnerBlock.HeatLevel heatLevel) {

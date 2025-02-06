@@ -9,9 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +18,7 @@ import java.util.function.BiFunction;
 
 public class Boiler extends BlockTemp {
 
-    private static final BiFunction<Double, Double, Double> boilerBlend = HeatUtils.createBlender(3);
+    private static final BiFunction<Double, Double, Double> boilerBlend = HeatUtils.createBlender(8);
 
     public Boiler(Block... block) {
         super(block);
@@ -29,7 +27,7 @@ public class Boiler extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (!Config.CONFIG.boilerTemperature.get() && !Config.CONFIG.lavaTemperature.get()) return 0d;
+        if (!Config.CONFIG.boilerTemperature.get() && !Config.CONFIG.liquidTemperature.get()) return 0d;
 
         FluidTankBlockEntity blockEntity = (FluidTankBlockEntity) level.getBlockEntity(blockPos);
         if (this.hasBlock(blockState.getBlock()) && blockEntity != null) {
@@ -41,16 +39,15 @@ public class Boiler extends BlockTemp {
                 if (blockTemperature.get() != 0) return blockTemperature.get();
             }
 
-            if (Config.CONFIG.lavaTemperature.get() && blockTemperature.get() == 0){
-                LazyOptional<IFluidHandler> lazyOptional = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
-                lazyOptional.ifPresent(
+            if (blockTemperature.get() == 0 && Config.CONFIG.liquidTemperature.get()){
+                blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(
                         iFluidHandler -> {
-                            FluidStack fluidTank = HeatUtils.getFluid(iFluidHandler, HeatUtils.LAVA);
-                            if (fluidTank != null) blockTemperature.set(Config.CONFIG.lavaTemperatureIncrement.get() * fluidTank.getAmount() / 1000);
+                            FluidStack fluidStack = HeatUtils.getFluid(iFluidHandler);
+                            if (fluidStack != null) blockTemperature.set(HeatUtils.getTemperatureFromFluidStack(distance, fluidStack));
                         }
                 );
             }
-            return HeatUtils.lavaBlend.apply(distance, blockTemperature.get());
+            return blockTemperature.get();
         }
         return 0d;
     }

@@ -22,19 +22,15 @@ public class PipesAndPumps extends BlockTemp {
     }
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (!Config.CONFIG.lavaTemperature.get()) return 0d;
+        if (!Config.CONFIG.liquidTemperature.get()) return 0d;
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (!this.hasBlock(blockState.getBlock()) || blockEntity == null) return 0d;
         SmartBlockEntity pipeBlockEntity = (SmartBlockEntity) blockEntity;
         FluidTransportBehaviour fluidTransportBehaviour = pipeBlockEntity.getBehaviour(FluidTransportBehaviour.TYPE);
         for (Direction direction: fluidTransportBehaviour.interfaces.keySet()) {
             FluidStack fluidStack = fluidTransportBehaviour.getProvidedOutwardFluid(direction);
-            if (fluidStack.isFluidEqual(HeatUtils.LAVA)) {
-                return HeatUtils.lavaBlend.apply(
-                        distance,
-                        Config.CONFIG.lavaTemperatureIncrement.get() * fluidStack.getAmount()
-                );
-            }
+            if(fluidStack.isEmpty()) continue;
+            return HeatUtils.getTemperatureFromFluidStack(distance, fluidStack);
         }
         return 0d;
     }

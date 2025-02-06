@@ -21,8 +21,8 @@ public class Config {
     public final ForgeConfigSpec.BooleanValue boilerTemperature;
     public final ForgeConfigSpec.DoubleValue boilerTemperatureIncrement;
 
-    public final ForgeConfigSpec.BooleanValue lavaTemperature;
-    public final ForgeConfigSpec.DoubleValue lavaTemperatureIncrement;
+    public final ForgeConfigSpec.BooleanValue liquidTemperature;
+    public final ForgeConfigSpec.DoubleValue defaultFluidDampener;
 
     public Config(ForgeConfigSpec.Builder builder) {
         builder.comment("General settings for YourMod")
@@ -52,13 +52,13 @@ public class Config {
                 .comment("The amount of MC UNITS to increase per heat level (max heat level is 18)")
                 .defineInRange("Boiler Increment", 0.04768717215d, 0d, 1d);
 
-        lavaTemperature = builder
-                .comment("Should Lava apply heat while in containers?")
-                .define("Lava", true);
+        liquidTemperature = builder
+                .comment("Should Liquids apply heat while in containers?")
+                .define("Liquids", true);
 
-        lavaTemperatureIncrement = builder
-                .comment("The temperature that 1 bucket of lava should apply (MC UNITS)")
-                .defineInRange("Lava Temperature per bucket", 0.4d, 0d, 1d);
+        defaultFluidDampener = builder
+                .comment("The temperature dampening on all default calculated liquids (calculated temperature / dampening)")
+                .defineInRange("Liquid temperature dampening", 5.391630902d, -100d, 100d);
 
         builder.pop();
     }
