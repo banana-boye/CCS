@@ -30,7 +30,7 @@ public class PipesAndPumps extends BlockTemp {
         for (Direction direction: fluidTransportBehaviour.interfaces.keySet()) {
             FluidStack fluidStack = fluidTransportBehaviour.getProvidedOutwardFluid(direction);
             if(fluidStack.isEmpty()) continue;
-            return HeatUtils.getTemperatureFromFluidStack(distance, fluidStack);
+            return HeatUtils.getTemperatureFromDistanceAndFluidStack(level, distance, fluidStack);
         }
         return 0d;
     }

@@ -1,8 +1,0 @@
-{
-  "values": [
-    "create:fluid_tank",
-    "create:creative_fluid_tank",
-    "create:copper_backtank",
-    "create:netherite_backtank"
-  ]
-}

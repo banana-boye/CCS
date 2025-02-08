@@ -18,7 +18,7 @@ public class TagUtils {
     public static final TagKey<Block> BLAZE_BURNER = blockTag("blaze_burner_block");
 
     public static TagKey<Block> blockTag(String name) {
-        return BlockTags.create(new ResourceLocation(CreateColdSweat.MODID, name));
+        return BlockTags.create(new ResourceLocation(CreateColdSweat.MOD_ID, name));
     }
 
     public static List<Block> getBlocksTaggedWith(TagKey<Block> tagKey) {

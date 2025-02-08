@@ -8,10 +8,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.slf4j.Logger;
 
-@Mod(CreateColdSweat.MODID)
+@Mod(CreateColdSweat.MOD_ID)
 public class CreateColdSweat
 {
-    public static final String MODID = "create_cold_sweat";
+    public static final String MOD_ID = "create_cold_sweat";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public CreateColdSweat () {

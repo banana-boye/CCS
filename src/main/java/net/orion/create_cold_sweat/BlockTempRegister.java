@@ -12,7 +12,7 @@ import net.orion.create_cold_sweat.utils.TagUtils;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Mod.EventBusSubscriber(modid = CreateColdSweat.MODID)
+@Mod.EventBusSubscriber(modid = CreateColdSweat.MOD_ID)
 public class BlockTempRegister {
 
     @SubscribeEvent

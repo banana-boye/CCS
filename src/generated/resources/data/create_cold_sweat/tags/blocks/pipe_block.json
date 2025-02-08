@@ -1,9 +1,0 @@
-{
-  "values": [
-    "create:fluid_pipe",
-    "create:encased_fluid_pipe",
-    "create:glass_fluid_pipe",
-    "create:mechanical_pump",
-    "create:smart_fluid_pipe"
-  ]
-}

@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class BlockTagGenerator extends BlockTagsProvider {
 
     public BlockTagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, CreateColdSweat.MODID, existingFileHelper);
+        super(output, lookupProvider, CreateColdSweat.MOD_ID, existingFileHelper);
     }
 
     @Override

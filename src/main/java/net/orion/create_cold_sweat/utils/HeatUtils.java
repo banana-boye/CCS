@@ -1,12 +1,21 @@
 package net.orion.create_cold_sweat.utils;
 
+import com.mojang.datafixers.util.Pair;
 import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.datagen.DataGeneratorRegister;
+import net.orion.create_cold_sweat.datagen.FluidTemperatureType;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -14,12 +23,34 @@ public class HeatUtils {
 
     public static final BiFunction<Double, Double, Double> fluidBlend = HeatUtils.createBlender(3);
 
-    public static double getTemperatureFromFluidStack(double distance, FluidStack fluidStack) {
+    public static double getTemperatureFromDistanceAndFluidStack(Level level, double distance, FluidStack fluidStack) {
+        double dataTemp = getFluidDataTemp(level, fluidStack);
+        return fluidBlend.apply(distance, dataTemp == 0d ? calculateFluidTemperature(fluidStack) : dataTemp);
+    }
+
+    private static double getFluidDataTemp(Level level, FluidStack fluidStack) {
+        RegistryAccess registryAccess = Objects.requireNonNull(level.getServer()).registryAccess();
+        Optional<Registry<FluidTemperatureType>> registryOptional = registryAccess.registry(DataGeneratorRegister.FLUID_TEMPERATURE_KEY);
+
+        if (registryOptional.isEmpty()) return 0d;
+        Registry<FluidTemperatureType> registry = registryOptional.get();
+        return getFluidTemperature(registry, fluidStack);
+    }
+
+    private static double getFluidTemperature(Registry<FluidTemperatureType> registry, FluidStack fluidStack) {
+        for (FluidTemperatureType fluidTemperatureType : registry) {
+            for (Pair<Fluid, Double> pair : fluidTemperatureType.values()) {
+                if (fluidStack.getFluid().equals(pair.getFirst())) return pair.getSecond();
+            }
+        }
+        return 0d;
+    }
+
+    public static double calculateFluidTemperature(FluidStack fluidStack) {
         int temperature = fluidStack.getFluid().getFluidType().getTemperature();
         if (temperature == 300) return 0d;
         int amount = fluidStack.getAmount();
-        double mcuAmounted = ((temperature - 300) * 0.04291845494) * (amount == 1 ? 1000 : amount) / 1000;
-        return fluidBlend.apply(distance, mcuAmounted / Config.CONFIG.defaultFluidDampener.get());
+        return (((temperature - 300) * 0.04291845494) * (amount == 1 ? 1000 : amount) / 1000) / Config.CONFIG.defaultFluidDampener.get();
     }
 
     public static BiFunction<Double, Double, Double> createBlender(int maxDistance) {

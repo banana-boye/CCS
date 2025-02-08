@@ -30,7 +30,7 @@ public class FluidContainers extends BlockTemp {
         blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(
             iFluidHandler -> {
                 FluidStack fluidStack = HeatUtils.getFluid(iFluidHandler);
-                if (fluidStack != null) blockTemperature.set(HeatUtils.getTemperatureFromFluidStack(distance, fluidStack));
+                if (fluidStack != null) blockTemperature.set(HeatUtils.getTemperatureFromDistanceAndFluidStack(level, distance, fluidStack));
             }
         );
 
