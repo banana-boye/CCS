@@ -36,13 +36,13 @@ public class Config {
                 .defineInRange("Kindled", 0.04291845494d,0d,1d);
         bBFading = builder
                 .comment("Blaze burner fading temperature (MC UNITS)")
-                .defineInRange("exampleFeatureEnabled", 0.1287553648d, 0d, 1d);
+                .defineInRange("Fading", 0.1287553648d, 0d, 1d);
         bBKindled = builder
                 .comment("Blaze burner kindled temperature (MC UNITS)")
-                .defineInRange("exampleFeatureEnabled", 0.2145922747d, 0d, 1d);
+                .defineInRange("Kindled", 0.2145922747d, 0d, 1d);
         bBSeething = builder
                 .comment("Blaze burner seething temperature (MC UNITS)")
-                .defineInRange("exampleFeatureEnabled", 0.4291845494d, 0d, 1d);
+                .defineInRange("Seething", 0.4291845494d, 0d, 1d);
 
         boilerTemperature = builder
                 .comment("Should Boilers apply heat?")
