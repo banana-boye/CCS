@@ -25,7 +25,7 @@ public class Config {
     public final ForgeConfigSpec.DoubleValue defaultFluidDampener;
 
     public Config(ForgeConfigSpec.Builder builder) {
-        builder.comment("General settings for YourMod")
+        builder.comment("Create: Cold Sweat settings")
                 .push("General");
 
         blazeBurnerTemperature = builder
@@ -33,7 +33,7 @@ public class Config {
                 .define("Blaze burner", true);
         bBSmouldering = builder
                 .comment("Blaze burner smouldering temperature (MC UNITS)")
-                .defineInRange("Kindled", 0.04291845494d,0d,1d);
+                .defineInRange("Smouldering", 0.04291845494d,0d,1d);
         bBFading = builder
                 .comment("Blaze burner fading temperature (MC UNITS)")
                 .defineInRange("Fading", 0.1287553648d, 0d, 1d);
