@@ -49,8 +49,8 @@ public class Config {
                 .define("Boiler", true);
 
         boilerTemperatureIncrement = builder
-                .comment("The amount of MC UNITS to increase per heat level (max heat level is 18)")
-                .defineInRange("Boiler Increment", 0.04768717215d, 0d, 1d);
+                .comment("The amount of MC UNITS to increase per heat level (max heat level is 18) (per block)")
+                .defineInRange("Boiler Increment", 0.00476871721d, 0d, 1d);
 
         liquidTemperature = builder
                 .comment("Should Liquids apply heat while in containers?")

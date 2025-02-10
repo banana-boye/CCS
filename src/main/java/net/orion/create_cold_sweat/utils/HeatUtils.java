@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.datagen.DataGeneratorRegister;
 import net.orion.create_cold_sweat.datagen.FluidTemperatureType;
 
@@ -63,9 +64,7 @@ public class HeatUtils {
 
     public static double calculateBoilerTemperature(FluidTankBlockEntity tankBlockEntity, Function<Double, Double> calculateHeat) {
         if (tankBlockEntity == null) return 0d;
-        if (tankBlockEntity.boiler == null) return 0d;
-        if (tankBlockEntity.boiler.activeHeat == 0) return 0d;
-        return calculateHeat.apply(Config.CONFIG.boilerTemperatureIncrement.get() * tankBlockEntity.boiler.activeHeat);
+        return calculateHeat.apply(Config.CONFIG.boilerTemperatureIncrement.get() * tankBlockEntity.getControllerBE().boiler.activeHeat);
     }
 
     @Nullable
