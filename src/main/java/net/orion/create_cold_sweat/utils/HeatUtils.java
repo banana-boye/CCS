@@ -5,12 +5,12 @@ import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.orion.create_cold_sweat.Config;
-import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.datagen.DataGeneratorRegister;
 import net.orion.create_cold_sweat.datagen.FluidTemperatureType;
 
@@ -30,7 +30,8 @@ public class HeatUtils {
     }
 
     private static double getFluidDataTemp(Level level, FluidStack fluidStack) {
-        RegistryAccess registryAccess = Objects.requireNonNull(level.getServer()).registryAccess();
+        if (!(level instanceof ServerLevel server)) return 0d;
+        RegistryAccess registryAccess = server.registryAccess();
         Optional<Registry<FluidTemperatureType>> registryOptional = registryAccess.registry(DataGeneratorRegister.FLUID_TEMPERATURE_KEY);
 
         if (registryOptional.isEmpty()) return 0d;
