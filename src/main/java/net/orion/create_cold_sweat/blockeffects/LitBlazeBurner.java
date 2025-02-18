@@ -7,10 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.orion.create_cold_sweat.Config;
-import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiFunction;
 
 public class LitBlazeBurner extends BlockTemp {
 
