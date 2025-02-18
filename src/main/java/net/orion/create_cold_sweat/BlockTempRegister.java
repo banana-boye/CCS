@@ -17,13 +17,14 @@ public class BlockTempRegister {
 
     @SubscribeEvent
     public void register(BlockTempRegisterEvent blockTempRegisterEvent) {
-        BiConsumer<TagKey<Block>, Function<Block, BlockTemp>> registerBlockTemp = (tagKey, blockBlockTempFunction) -> registerBlocksOfTag(blockTempRegisterEvent, tagKey, blockBlockTempFunction);
+        BiConsumer<TagKey<Block>, Function<Block, BlockTemp>> registerBlockTempWithTag = (tagKey, blockBlockTempFunction) -> registerBlocksOfTag(blockTempRegisterEvent, tagKey, blockBlockTempFunction);
         CreateColdSweat.LOGGER.info("Registering Create: Cold Sweat BlockEffects");
-        registerBlockTemp.accept(TagUtils.BLAZE_BURNER, BlazeBurner::new);
-        registerBlockTemp.accept(TagUtils.STEAM_ENGINE, SteamEngine::new);
-        registerBlockTemp.accept(TagUtils.BOILER, Boiler::new);
-        registerBlockTemp.accept(TagUtils.PIPES, PipesAndPumps::new);
-        registerBlockTemp.accept(TagUtils.FLUID_CONTAINERS, FluidContainers::new);
+        registerBlockTempWithTag.accept(TagUtils.BLAZE_BURNER, BlazeBurner::new);
+        registerBlockTempWithTag.accept(TagUtils.STEAM_ENGINE, SteamEngine::new);
+        registerBlockTempWithTag.accept(TagUtils.BOILER, Boiler::new);
+        registerBlockTempWithTag.accept(TagUtils.PIPES, PipesAndPumps::new);
+        registerBlockTempWithTag.accept(TagUtils.FLUID_CONTAINERS, FluidContainers::new);
+        blockTempRegisterEvent.register(new LitBlazeBurner());
         CreateColdSweat.LOGGER.info("Registered Create: Cold Sweat BlockEffects");
     }
 

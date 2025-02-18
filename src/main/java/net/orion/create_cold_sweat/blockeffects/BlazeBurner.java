@@ -2,12 +2,15 @@ package net.orion.create_cold_sweat.blockeffects;
 
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +19,8 @@ import java.util.function.BiFunction;
 
 public class BlazeBurner extends BlockTemp {
 
-    private static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(8);
+    public static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(8);
+    private static final EnumProperty<LitBlazeBurnerBlock.FlameType> flameType = EnumProperty.create("flame_type", LitBlazeBurnerBlock.FlameType.class);
 
     public BlazeBurner(Block... blocks) {
         super(blocks);
