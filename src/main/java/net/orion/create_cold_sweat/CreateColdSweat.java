@@ -17,12 +17,12 @@ public class CreateColdSweat
     public CreateColdSweat () {
         IEventBus FORGE_EVENT_BUS = MinecraftForge.EVENT_BUS;
 
-        LOGGER.info("Registering..");
+        LOGGER.info("Registering to events..");
 
         FORGE_EVENT_BUS.register(new BlockTempRegister());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
 
-        LOGGER.info("Successfully registered.");
+        LOGGER.info("Event registering complete.");
     }
 }
