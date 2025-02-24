@@ -27,27 +27,24 @@ public class Boiler extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (!Config.CONFIG.boilerTemperature.get() && !Config.CONFIG.liquidTemperature.get()) return 0d;
+        if ((!Config.CONFIG.boilerTemperature.get() && !Config.CONFIG.liquidTemperature.get()) || !this.hasBlock(blockState.getBlock()) || !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)) return 0d;
 
-        if (this.hasBlock(blockState.getBlock()) && (level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)) {
-            AtomicDouble blockTemperature = new AtomicDouble();
+        AtomicDouble blockTemperature = new AtomicDouble();
 
-            // Calculate boiler blocks
-            if (Config.CONFIG.boilerTemperature.get()){
-                blockTemperature.set(HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> boilerBlend.apply(distance, temperature)));
-                if (blockTemperature.get() != 0) return blockTemperature.get();
-            }
-
-            if (blockTemperature.get() == 0 && Config.CONFIG.liquidTemperature.get()){
-                fluidTankBlockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(
-                        iFluidHandler -> {
-                            FluidStack fluidStack = HeatUtils.getFluid(iFluidHandler);
-                            if (fluidStack != null) blockTemperature.set(HeatUtils.getTemperatureFromDistanceAndFluidStack(level, distance, fluidStack));
-                        }
-                );
-            }
-            return blockTemperature.get();
+        // Calculate boiler blocks
+        if (Config.CONFIG.boilerTemperature.get()){
+            blockTemperature.set(HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> boilerBlend.apply(distance, temperature)));
+            if (blockTemperature.get() != 0) return blockTemperature.get();
         }
-        return 0d;
+
+        if (blockTemperature.get() == 0 && Config.CONFIG.liquidTemperature.get()){
+            fluidTankBlockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(
+                    iFluidHandler -> {
+                        FluidStack fluidStack = HeatUtils.getFluid(iFluidHandler);
+                        if (fluidStack != null) blockTemperature.set(HeatUtils.getTemperatureFromDistanceAndFluidStack(level, distance, fluidStack));
+                    }
+            );
+        }
+        return blockTemperature.get();
     }
 }

@@ -22,8 +22,7 @@ public class SteamEngine extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (Config.CONFIG.boilerTemperature.get()) return 0d;
-        if (!this.hasBlock(blockState.getBlock()) || !(level.getBlockEntity(blockPos) instanceof SteamEngineBlockEntity blockEntity)) return 0d;
+        if (Config.CONFIG.boilerTemperature.get() || !this.hasBlock(blockState.getBlock()) || !(level.getBlockEntity(blockPos) instanceof SteamEngineBlockEntity blockEntity)) return 0d;
 
         return HeatUtils.calculateBoilerTemperature(blockEntity.getTank(), (Double temperature) -> steamEngineBlend.apply(distance, temperature));
     }

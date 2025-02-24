@@ -21,8 +21,7 @@ public class FluidContainers extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if(!Config.CONFIG.liquidTemperature.get()) return 0d;
-        if (!(level.getBlockEntity(blockPos) instanceof SmartBlockEntity blockEntity)) return 0d;
+        if(!Config.CONFIG.liquidTemperature.get() || !(level.getBlockEntity(blockPos) instanceof SmartBlockEntity blockEntity)) return 0d;
         AtomicDouble blockTemperature = new AtomicDouble(0d);
 
         blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(

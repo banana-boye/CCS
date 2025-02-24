@@ -17,8 +17,7 @@ public class LitBlazeBurner extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (!Config.CONFIG.blazeBurnerTemperature.get()) return 0d;
-        if (!this.hasBlock(blockState.getBlock())) return 0d;
+        if (!Config.CONFIG.blazeBurnerTemperature.get() || !this.hasBlock(blockState.getBlock())) return 0d;
 
         return BlazeBurner.blazeBlend.apply(distance, 0.1287553648d);
     }

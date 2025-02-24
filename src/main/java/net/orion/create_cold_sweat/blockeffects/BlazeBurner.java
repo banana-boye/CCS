@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.orion.create_cold_sweat.Config;
-import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +19,6 @@ import java.util.function.BiFunction;
 public class BlazeBurner extends BlockTemp {
 
     public static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(8);
-    private static final EnumProperty<LitBlazeBurnerBlock.FlameType> flameType = EnumProperty.create("flame_type", LitBlazeBurnerBlock.FlameType.class);
 
     public BlazeBurner(Block... blocks) {
         super(blocks);
@@ -28,8 +26,7 @@ public class BlazeBurner extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (!Config.CONFIG.blazeBurnerTemperature.get()) return 0d;
-        if (!this.hasBlock(blockState.getBlock())) return 0d;
+        if (!Config.CONFIG.blazeBurnerTemperature.get() || !this.hasBlock(blockState.getBlock())) return 0d;
 
         return Arrays.stream(BlazeBurnerBlock.HeatLevel.values())
                 .map(hl -> isHeatLevel(blockState, hl) ? blazeBlend.apply(distance, switch (hl) {
