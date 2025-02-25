@@ -65,7 +65,9 @@ public class HeatUtils {
 
     public static double calculateBoilerTemperature(FluidTankBlockEntity tankBlockEntity, Function<Double, Double> calculateHeat) {
         if (tankBlockEntity == null) return 0d;
-        return calculateHeat.apply(Config.CONFIG.boilerTemperatureIncrement.get() * tankBlockEntity.getControllerBE().boiler.activeHeat);
+        FluidTankBlockEntity controller = tankBlockEntity.getControllerBE();
+        if (controller == null) return 0d;
+        return calculateHeat.apply(Config.CONFIG.boilerTemperatureIncrement.get() * controller.boiler.activeHeat);
     }
 
     @Nullable
