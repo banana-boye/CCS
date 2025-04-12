@@ -1,11 +1,11 @@
 package net.orion.create_cold_sweat.datagen;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.utils.TagUtils;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ public class BlockTagGenerator extends BlockTagsProvider {
         IntrinsicTagAppender<Block> burners = tag(TagUtils.BLAZE_BURNER);
         IntrinsicTagAppender<Block> steamEngines = tag(TagUtils.STEAM_ENGINE);
 
-        for (Block block : ForgeRegistries.BLOCKS) {
+        for (Block block : BuiltInRegistries.BLOCK) {
             String blockName = block.getDescriptionId().toLowerCase();
 
             if (blockName.contains("pipe") || (blockName.contains("mechanical") && blockName.contains("pump"))) {

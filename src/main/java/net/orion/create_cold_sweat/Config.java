@@ -1,30 +1,32 @@
 package net.orion.create_cold_sweat;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class Config {
-    public static final ForgeConfigSpec SERVER_SPEC;
+    public static final ModConfigSpec SERVER_SPEC;
     public static final Config CONFIG;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        CONFIG = new Config(builder);
-        SERVER_SPEC = builder.build();
+        Pair<Config, ModConfigSpec> pair =
+                new ModConfigSpec.Builder().configure(Config::new);
+        CONFIG = pair.getLeft();
+        SERVER_SPEC = pair.getRight();
     }
 
-    public final ForgeConfigSpec.BooleanValue blazeBurnerTemperature;
-    public final ForgeConfigSpec.DoubleValue bBSmouldering;
-    public final ForgeConfigSpec.DoubleValue bBFading;
-    public final ForgeConfigSpec.DoubleValue bBKindled;
-    public final ForgeConfigSpec.DoubleValue bBSeething;
+    public final ModConfigSpec.BooleanValue blazeBurnerTemperature;
+    public final ModConfigSpec.DoubleValue bBSmouldering;
+    public final ModConfigSpec.DoubleValue bBFading;
+    public final ModConfigSpec.DoubleValue bBKindled;
+    public final ModConfigSpec.DoubleValue bBSeething;
 
-    public final ForgeConfigSpec.BooleanValue boilerTemperature;
-    public final ForgeConfigSpec.DoubleValue boilerTemperatureIncrement;
+    public final ModConfigSpec.BooleanValue boilerTemperature;
+    public final ModConfigSpec.DoubleValue boilerTemperatureIncrement;
 
-    public final ForgeConfigSpec.BooleanValue liquidTemperature;
-    public final ForgeConfigSpec.DoubleValue defaultFluidDampener;
+    public final ModConfigSpec.BooleanValue liquidTemperature;
+    public final ModConfigSpec.DoubleValue defaultFluidDampener;
 
-    public Config(ForgeConfigSpec.Builder builder) {
+    public Config(ModConfigSpec.Builder builder) {
         builder.comment("Create: Cold Sweat settings")
                 .push("General");
 
