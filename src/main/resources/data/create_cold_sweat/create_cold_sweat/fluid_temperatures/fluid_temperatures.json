@@ -1,7 +1,7 @@
 {
   "units": "c",
   "values": {
-    "minecraft:water": -1,
+    "minecraft:water": 0,
     "minecraft:lava": 8
   }
 }  
