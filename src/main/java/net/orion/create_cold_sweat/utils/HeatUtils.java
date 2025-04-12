@@ -5,11 +5,11 @@ import com.momosoftworks.coldsweat.util.math.CSMath;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.datagen.DataGeneratorRegister;
 import net.orion.create_cold_sweat.datagen.FluidTemperatureType;
@@ -40,7 +40,7 @@ public class HeatUtils {
     }
 
     private static double getFluidTemperature(Registry<FluidTemperatureType> registry, FluidStack fluidStack) {
-        String fluidId = Objects.requireNonNull(ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid())).toString();
+        String fluidId = Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluidStack.getFluid())).toString();
         for (FluidTemperatureType fluidTemperatureType : registry) {
             if (!fluidTemperatureType.values().containsKey(fluidId)) continue;
             return Temperature.convert(fluidTemperatureType.values().get(fluidId), fluidTemperatureType.units(), Temperature.Units.MC, false);

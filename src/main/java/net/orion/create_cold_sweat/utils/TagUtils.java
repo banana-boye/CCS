@@ -1,10 +1,10 @@
 package net.orion.create_cold_sweat.utils;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.orion.create_cold_sweat.CreateColdSweat;
 
 import java.util.ArrayList;
@@ -18,12 +18,12 @@ public class TagUtils {
     public static final TagKey<Block> BLAZE_BURNER = blockTag("blaze_burner_block");
 
     public static TagKey<Block> blockTag(String name) {
-        return BlockTags.create(new ResourceLocation(CreateColdSweat.MOD_ID, name));
+        return BlockTags.create(ResourceLocation.fromNamespaceAndPath(CreateColdSweat.MOD_ID, name));
     }
 
     public static List<Block> getBlocksTaggedWith(TagKey<Block> tagKey) {
         List<Block> blocks = new ArrayList<>();
-        for (Block block : ForgeRegistries.BLOCKS) {
+        for (Block block : BuiltInRegistries.BLOCK) {
             if (block.defaultBlockState().is(tagKey)) {
                 blocks.add(block);
                 CreateColdSweat.LOGGER.info(block.getName().toString());

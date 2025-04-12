@@ -6,16 +6,16 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.orion.create_cold_sweat.CreateColdSweat;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = CreateColdSweat.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = CreateColdSweat.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGeneratorRegister {
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
@@ -27,7 +27,7 @@ public class DataGeneratorRegister {
         generator.addProvider(event.includeServer(), new BlockTagGenerator(packOutput, lookupProvider, existingFileHelper));
     }
 
-    public static final ResourceKey<Registry<FluidTemperatureType>> FLUID_TEMPERATURE_KEY = ResourceKey.createRegistryKey(new ResourceLocation(CreateColdSweat.MOD_ID, "fluid_temperatures"));
+    public static final ResourceKey<Registry<FluidTemperatureType>> FLUID_TEMPERATURE_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(CreateColdSweat.MOD_ID, "fluid_temperatures"));
 
     @SubscribeEvent
     public static void onDataPackRegistry(DataPackRegistryEvent.NewRegistry newRegistry) {

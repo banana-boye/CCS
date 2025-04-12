@@ -4,21 +4,20 @@ import com.momosoftworks.coldsweat.api.event.core.registry.BlockTempRegisterEven
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.orion.create_cold_sweat.blockeffects.*;
 import net.orion.create_cold_sweat.utils.TagUtils;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Mod.EventBusSubscriber(modid = CreateColdSweat.MOD_ID)
+@EventBusSubscriber(modid = CreateColdSweat.MOD_ID)
 public class BlockTempRegister {
 
     @SubscribeEvent
-    public void register(BlockTempRegisterEvent blockTempRegisterEvent) {
+    public static void register(BlockTempRegisterEvent blockTempRegisterEvent) {
         BiConsumer<TagKey<Block>, Function<Block, BlockTemp>> registerBlockTempWithTag = (tagKey, blockBlockTempFunction) -> registerBlocksOfTag(blockTempRegisterEvent, tagKey, blockBlockTempFunction);
-        CreateColdSweat.LOGGER.info("Registering Create: Cold Sweat BlockEffects");
 
         registerBlockTempWithTag.accept(TagUtils.BLAZE_BURNER, BlazeBurner::new);
         registerBlockTempWithTag.accept(TagUtils.STEAM_ENGINE, SteamEngine::new);
@@ -31,6 +30,9 @@ public class BlockTempRegister {
     }
 
     public static void registerBlocksOfTag(BlockTempRegisterEvent blockTempRegisterEvent, TagKey<Block> tagKey, Function<Block, BlockTemp> blockTempSupplier) {
-        TagUtils.getBlocksTaggedWith(tagKey).forEach(block -> blockTempRegisterEvent.register(blockTempSupplier.apply(block)));
+        TagUtils.getBlocksTaggedWith(tagKey).forEach(block -> {
+            CreateColdSweat.LOGGER.info("Registering {} with tag {}", block.getName(), tagKey.toString());
+            blockTempRegisterEvent.register(blockTempSupplier.apply(block));
+        });
     }
 }
