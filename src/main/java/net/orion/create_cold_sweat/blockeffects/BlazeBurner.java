@@ -26,7 +26,8 @@ public class BlazeBurner extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if (!Config.CONFIG.blazeBurnerTemperature.get() || !this.hasBlock(blockState.getBlock())) return 0d;
+        boolean blazeBurnerTemperatureDisabled = !Config.CONFIG.blazeBurnerTemperature.get();
+        if (blazeBurnerTemperatureDisabled || !this.hasBlock(blockState.getBlock())) return 0d;
 
         return Arrays.stream(BlazeBurnerBlock.HeatLevel.values())
                 .map(hl -> isHeatLevel(blockState, hl) ? blazeBlend.apply(distance, switch (hl) {

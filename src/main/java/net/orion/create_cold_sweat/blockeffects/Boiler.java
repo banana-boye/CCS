@@ -27,17 +27,29 @@ public class Boiler extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if ((!Config.CONFIG.boilerTemperature.get() && !Config.CONFIG.liquidTemperature.get()) || !this.hasBlock(blockState.getBlock()) || !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)) return 0d;
+        // Whether configs disabled this feature
+        Boolean liquidTemperatureEnabled = Config.CONFIG.liquidTemperature.get();
+        Boolean boilerTemperatureEnabled = Config.CONFIG.boilerTemperature.get();
+        boolean configDisabled = !boilerTemperatureEnabled && !liquidTemperatureEnabled;
+        boolean doesNotHaveBlock = !this.hasBlock(blockState.getBlock());
+
+        if (
+                configDisabled ||
+                doesNotHaveBlock ||
+                !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)
+        ) return 0d;
 
         AtomicDouble blockTemperature = new AtomicDouble();
 
         // Calculate boiler blocks
-        if (Config.CONFIG.boilerTemperature.get()){
+        if (boilerTemperatureEnabled){
+            // Checks if the fluid tank is an active boiler and calculates the value according to speed and other values
             blockTemperature.set(HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> boilerBlend.apply(distance, temperature)));
             if (blockTemperature.get() != 0) return blockTemperature.get();
         }
 
-        if (blockTemperature.get() == 0 && Config.CONFIG.liquidTemperature.get()){
+        // If the fluid tank is NOT a boiler, it'll calculate the fluid temperature it contains
+        if (blockTemperature.get() == 0 && liquidTemperatureEnabled){
             fluidTankBlockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).ifPresent(
                     iFluidHandler -> {
                         FluidStack fluidStack = HeatUtils.getFluid(iFluidHandler);
