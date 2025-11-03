@@ -2,6 +2,7 @@ package net.orion.create_cold_sweat;
 
 import com.momosoftworks.coldsweat.api.event.core.registry.BlockTempRegisterEvent;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
+import com.simibubi.create.AllBlocks;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,6 +27,7 @@ public class BlockTempRegister {
         registerBlockTempWithTag.accept(TagUtils.PIPES, PipesAndPumps::new);
         registerBlockTempWithTag.accept(TagUtils.FLUID_CONTAINERS, FluidContainers::new);
         blockTempRegisterEvent.register(new LitBlazeBurner());
+        blockTempRegisterEvent.register(new EncasedFan(AllBlocks.ENCASED_FAN.get()));
 
         CreateColdSweat.LOGGER.info("Registered Create: Cold Sweat BlockEffects");
     }
