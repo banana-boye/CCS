@@ -23,10 +23,10 @@ public class PipesAndPumps extends BlockTemp {
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
         boolean liquidTemperatureDisabled = !Config.CONFIG.liquidTemperature.get();
         if (
-                liquidTemperatureDisabled ||
-                !this.hasBlock(blockState.getBlock()) ||
-                !(level.getBlockEntity(blockPos) instanceof SmartBlockEntity pipeBlockEntity) ||
-                pipeBlockEntity.getBehaviour(FluidTransportBehaviour.TYPE) == null
+            liquidTemperatureDisabled ||
+            !this.hasBlock(blockState.getBlock()) ||
+            !(level.getBlockEntity(blockPos) instanceof SmartBlockEntity pipeBlockEntity) ||
+            pipeBlockEntity.getBehaviour(FluidTransportBehaviour.TYPE) == null
         ) return 0d;
 
         FluidTransportBehaviour fluidTransportBehaviour = pipeBlockEntity.getBehaviour(FluidTransportBehaviour.TYPE);

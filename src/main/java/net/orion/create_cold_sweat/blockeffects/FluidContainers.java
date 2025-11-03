@@ -23,8 +23,8 @@ public class FluidContainers extends BlockTemp {
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
         boolean liquidTemperatureDisabled = !Config.CONFIG.liquidTemperature.get();
         if(
-                liquidTemperatureDisabled ||
-                !(level.getBlockEntity(blockPos) instanceof SmartBlockEntity blockEntity)
+            liquidTemperatureDisabled ||
+            !(level.getBlockEntity(blockPos) instanceof SmartBlockEntity blockEntity)
         ) return 0d;
         AtomicDouble blockTemperature = new AtomicDouble(0d);
 

@@ -28,16 +28,16 @@ public class BlazeBurner extends BlockTemp {
         if (blazeBurnerTemperatureDisabled || !this.hasBlock(blockState.getBlock())) return 0d;
 
         return Arrays.stream(BlazeBurnerBlock.HeatLevel.values())
-                .map(hl -> isHeatLevel(blockState, hl) ? blazeBlend.apply(distance, switch (hl) {
-                    case NONE -> 0d;
-                    case SMOULDERING -> Config.CONFIG.bBSmouldering.get();
-                    case FADING -> Config.CONFIG.bBFading.get();
-                    case KINDLED -> Config.CONFIG.bBKindled.get();
-                    case SEETHING -> Config.CONFIG.bBSeething.get();
-                }) : 0d)
-                .filter(t -> t != 0d)
-                .findFirst()
-                .orElse(0d);
+            .map(hl -> isHeatLevel(blockState, hl) ? blazeBlend.apply(distance, switch (hl) {
+                case NONE -> 0d;
+                case SMOULDERING -> Config.CONFIG.bBSmouldering.get();
+                case FADING -> Config.CONFIG.bBFading.get();
+                case KINDLED -> Config.CONFIG.bBKindled.get();
+                case SEETHING -> Config.CONFIG.bBSeething.get();
+            }) : 0d)
+            .filter(t -> t != 0d)
+            .findFirst()
+            .orElse(0d);
     }
 
     private boolean isHeatLevel(BlockState blockState, BlazeBurnerBlock.HeatLevel heatLevel) {

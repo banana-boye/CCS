@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.MathConstants;
+import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class EncasedFan extends BlockTemp {
@@ -27,10 +29,10 @@ public class EncasedFan extends BlockTemp {
         boolean doesNotHaveBlock = !this.hasBlock(blockState.getBlock());
 
         if (
-                configDisabled ||
-                doesNotHaveBlock ||
-                !(level.getBlockEntity(blockPos) instanceof EncasedFanBlockEntity encasedFan) ||
-                livingEntity == null
+            configDisabled ||
+            doesNotHaveBlock ||
+            !(level.getBlockEntity(blockPos) instanceof EncasedFanBlockEntity encasedFan) ||
+            livingEntity == null
         ) return 0d;
 
         if (encasedFan.getSpeed() == 0) return 0d;
@@ -48,15 +50,22 @@ public class EncasedFan extends BlockTemp {
             double effectEfficiency = getEffectEfficiency(encasedFan, angle, maxRadians);
             double targetTemperature = WorldHelper.getBiomeTemperature(level, level.getBiome(blockPos));
             double playerTemperature = Temperature.get(livingEntity, Temperature.Trait.WORLD);
-            double difference = targetTemperature - playerTemperature;
-            double generated = effectEfficiency * difference;
-
-            // If x approaches 0 from the left, then the max is 0, if x approaches 0 from the right, then the min is 0
-            // This is so that it doesn't overshoot, a fan can't make you cooler than the surrounding air
-            return targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
+            double generatedTemperature = getGeneratedTemperature(targetTemperature, playerTemperature, effectEfficiency);
+            return HeatUtils.blend(distance, generatedTemperature, (int) (encasedFan.getMaxDistance() + 0.5));
         }
 
         return 0d;
+    }
+
+    private static double getGeneratedTemperature(double targetTemperature, double playerTemperature, double effectEfficiency) {
+        double difference = targetTemperature - playerTemperature;
+        double generated = effectEfficiency * difference;
+
+        // If x approaches 0 from the left, then the max is 0, if x approaches 0 from the right, then the min is 0
+        // This is so that it doesn't overshoot, a fan can't make you cooler than the surrounding air
+        double generatedTemperature = targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
+        generatedTemperature = generatedTemperature * MathConstants.FAN_DAMPENER;
+        return generatedTemperature;
     }
 
     private static double getEffectEfficiency(EncasedFanBlockEntity encasedFan, double angle, double maxRadians) {

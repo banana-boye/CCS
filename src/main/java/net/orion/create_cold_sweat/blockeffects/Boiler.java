@@ -34,9 +34,9 @@ public class Boiler extends BlockTemp {
         boolean doesNotHaveBlock = !this.hasBlock(blockState.getBlock());
 
         if (
-                configDisabled ||
-                doesNotHaveBlock ||
-                !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)
+            configDisabled ||
+            doesNotHaveBlock ||
+            !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)
         ) return 0d;
 
         AtomicDouble blockTemperature = new AtomicDouble();
