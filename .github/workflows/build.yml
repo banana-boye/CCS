@@ -3,10 +3,10 @@ name: Build
 on:
   push:
     branches:
-      - 1.21.1
+      - master
   pull_request:
     branches:
-      - 1.21.1
+      - master
 
 jobs:
   build:
@@ -41,5 +41,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: create_ore_deposits-${{ steps.version.outputs.MOD_VERSION }}
+          name: create_cold_sweat-${{ steps.version.outputs.MOD_VERSION }}
           path: build/libs/*.jar
