@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import net.orion.create_cold_sweat.CreateColdSweat;
+import net.orion.create_cold_sweat.Config;
 import org.jetbrains.annotations.Nullable;
 
 public class EncasedFan extends BlockTemp {
@@ -23,34 +23,51 @@ public class EncasedFan extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        boolean configDisabled = false;
+        boolean configDisabled = !Config.CONFIG.fanCooling.get();
         boolean doesNotHaveBlock = !this.hasBlock(blockState.getBlock());
 
         if (
                 configDisabled ||
                 doesNotHaveBlock ||
-                !(level.getBlockEntity(blockPos) instanceof EncasedFanBlockEntity encasedFan)
+                !(level.getBlockEntity(blockPos) instanceof EncasedFanBlockEntity encasedFan) ||
+                livingEntity == null
         ) return 0d;
+
+        if (encasedFan.getSpeed() == 0) return 0d;
 
         Vec3 entityPosition = livingEntity.position();
 
         Direction facing = encasedFan.getBlockState().getValue(BlockStateProperties.FACING);
         double angle = getAngleFromFront(blockPos, facing, entityPosition);
-        int maxDegrees = 110;
-        double radians = Math.toRadians(maxDegrees);
 
-        if (encasedFan.getSpeed() > 0 && (angle <= radians)) {
-            double effectEfficiency = ((Math.abs(angle - radians) / radians) / 2) + ((encasedFan.getSpeed() / 256) / 2);
+        // Yes I know I could've asked for radians instead but degrees is just more readable, come on
+        double maxRadians = Math.toRadians(Config.CONFIG.maximumFanAngle.get());
+
+        if (angle <= maxRadians) {
+            // Efficiency
+            double effectEfficiency = getEffectEfficiency(encasedFan, angle, maxRadians);
             double targetTemperature = WorldHelper.getBiomeTemperature(level, level.getBiome(blockPos));
             double playerTemperature = Temperature.get(livingEntity, Temperature.Trait.WORLD);
             double difference = targetTemperature - playerTemperature;
             double generated = effectEfficiency * difference;
-            double generatedCap = targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
-            CreateColdSweat.LOGGER.info("diff {}\nefficiency: {}\nworld temp: {}\n entity temp: {}\n return temp: {}", Temperature.convert(difference, Temperature.Units.MC, Temperature.Units.C, false), effectEfficiency, Temperature.convert(targetTemperature, Temperature.Units.MC, Temperature.Units.C, false), Temperature.convert(playerTemperature, Temperature.Units.MC, Temperature.Units.C, false), Temperature.convert(generatedCap, Temperature.Units.MC, Temperature.Units.C, false));
-            return generatedCap;
+
+            // If x approaches 0 from the left, then the max is 0, if x approaches 0 from the right, then the min is 0
+            // This is so that it doesn't overshoot, a fan can't make you cooler than the surrounding air
+            return targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
         }
 
         return 0d;
+    }
+
+    private static double getEffectEfficiency(EncasedFanBlockEntity encasedFan, double angle, double maxRadians) {
+        double angleDifference = Math.abs(angle - maxRadians);
+        double unitAngleDifference = angleDifference / maxRadians;
+        float unitSpeed = encasedFan.getSpeed() / 256;
+
+        // Unit percentage of temperature effect on the player
+        // The angle affects half and so does the speed
+        // For maximum efficiency the angle has to be 90 (Directly in front) and the speed 256 (The maximum)
+        return (unitAngleDifference + unitSpeed) / 2;
     }
 
     public static double getAngleFromFront(BlockPos fanPos, Direction facing, Vec3 targetPos) {
