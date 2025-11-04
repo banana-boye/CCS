@@ -5,6 +5,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.spongepowered.mixin' version '0.7.+'
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.3"
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
 version = mod_version
@@ -133,4 +134,40 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+def dotenvFile = file(".env")
+if (dotenvFile.exists()) {
+    dotenvFile.eachLine { line ->
+        if (line && !line.startsWith("#") && line.contains("=")) {
+            def (key, value) = line.split("=", 2)
+
+            System.setProperty(key.trim(), value.trim())
+            System.getenv().put(key.trim(), value.trim())
+        }
+    }
+}
+
+publishMods {
+    file = jar.archiveFile
+    changelog = "Hello!"
+    type = STABLE
+    modLoaders.add("forge")
+
+    curseforge {
+        projectId = "1184450"
+        projectSlug = "create-cold-sweat"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add("1.20.1")
+        requires("create")
+        requires("cold-sweat")
+    }
+    modrinth {
+        projectId = "Arx7g8V4"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add("1.20.1")
+    }
+    discord {
+        webhookUrl = providers.environmentVariable("WEBHOOK_TOKEN")
+    }
 }
