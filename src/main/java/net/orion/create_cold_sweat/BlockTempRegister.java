@@ -25,6 +25,7 @@ public class BlockTempRegister {
         registerBlockTempWithTag.accept(TagUtils.BOILER, Boiler::new);
         registerBlockTempWithTag.accept(TagUtils.PIPES, PipesAndPumps::new);
         registerBlockTempWithTag.accept(TagUtils.FLUID_CONTAINERS, FluidContainers::new);
+        registerBlockTempWithTag.accept(TagUtils.ENCASED_FAN, EncasedFan::new);
         blockTempRegisterEvent.register(new LitBlazeBurner());
 
         CreateColdSweat.LOGGER.info("Registered Create: Cold Sweat BlockEffects");
