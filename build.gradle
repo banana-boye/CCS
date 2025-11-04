@@ -136,38 +136,26 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-def dotenvFile = file(".env")
-if (dotenvFile.exists()) {
-    dotenvFile.eachLine { line ->
-        if (line && !line.startsWith("#") && line.contains("=")) {
-            def (key, value) = line.split("=", 2)
-
-            System.setProperty(key.trim(), value.trim())
-            System.getenv().put(key.trim(), value.trim())
-        }
-    }
-}
-
 publishMods {
     file = jar.archiveFile
-    changelog = "Hello!"
+    changelog = file("CHANGELOG.md").text
     type = STABLE
     modLoaders.add("forge")
 
     curseforge {
         projectId = "1184450"
         projectSlug = "create-cold-sweat"
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        accessToken = providers.gradleProperty("CURSEFORGE_TOKEN")
         minecraftVersions.add("1.20.1")
         requires("create")
         requires("cold-sweat")
     }
     modrinth {
         projectId = "Arx7g8V4"
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        accessToken = providers.gradleProperty("MODRINTH_TOKEN")
         minecraftVersions.add("1.20.1")
     }
     discord {
-        webhookUrl = providers.environmentVariable("WEBHOOK_TOKEN")
+        webhookUrl = providers.gradleProperty("WEBHOOK_TOKEN")
     }
 }
