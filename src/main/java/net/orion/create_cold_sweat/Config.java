@@ -25,6 +25,7 @@ public class Config {
     public final ForgeConfigSpec.DoubleValue defaultFluidDampener;
     public final ForgeConfigSpec.BooleanValue fanCooling;
     public final ForgeConfigSpec.DoubleValue maximumFanAngle;
+    public final ForgeConfigSpec.BooleanValue fanTemperatureInteraction;
 
     public final ForgeConfigSpec.BooleanValue calculateDefaultLiquidTemperature;
 
@@ -63,6 +64,10 @@ public class Config {
         fanCooling = builder
                 .comment("Should fans affect player temperature?")
                 .define("Fans", true);
+
+        fanTemperatureInteraction = builder
+                .comment("Should fans use the block directly in front of them to set a temperature")
+                .define("Fan Temperature Interaction", false);
 
         maximumFanAngle = builder
                 .comment("The maximum angle fans are allowed to affect the player (Degrees)")

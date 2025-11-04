@@ -43,7 +43,7 @@ public class HeatUtils {
      * @param fluidStack The fluid stack
      * @return The fluid temperature
      */
-    private static double getFluidDataTemp(Level level, FluidStack fluidStack) {
+    public static double getFluidDataTemp(Level level, FluidStack fluidStack) {
         if (!(level instanceof ServerLevel server)) return 0d;
 
         RegistryAccess registryAccess = server.registryAccess();

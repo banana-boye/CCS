@@ -1,12 +1,15 @@
 name: Build
 
+env:
+  PUBLISH: false
+
 on:
   push:
     branches:
-      - master-1.0.3
+      - '**'
   pull_request:
     branches:
-      - master-1.0.3
+      - '**'
 
 jobs:
   build:

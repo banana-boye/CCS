@@ -1,5 +1,6 @@
 package net.orion.create_cold_sweat.blockeffects;
 
+import com.momosoftworks.coldsweat.api.registry.BlockTempRegistry;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
 import com.momosoftworks.coldsweat.api.util.Temperature;
 import com.momosoftworks.coldsweat.util.world.WorldHelper;
@@ -11,8 +12,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidStack;
 import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.MathConstants;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
@@ -48,24 +52,36 @@ public class EncasedFan extends BlockTemp {
         if (angle <= maxRadians) {
             // Efficiency
             double effectEfficiency = getEffectEfficiency(encasedFan, angle, maxRadians);
-            double targetTemperature = WorldHelper.getBiomeTemperature(level, level.getBiome(blockPos));
+            double targetTemperature = 0;
+            double biomeTemperature = WorldHelper.getBiomeTemperature(level, level.getBiome(blockPos));
+
+            if (Config.CONFIG.fanTemperatureInteraction.get()){
+                BlockPos offset = blockPos.offset(facing.getNormal());
+                BlockState state = level.getBlockState(offset);
+                double tempsFor = BlockTempRegistry.getBlockTempsFor(state)
+                        .stream().toList().get(0)
+                        .getTemperature(level, null, state, offset, 0d);
+                FluidState fluidState = level.getFluidState(offset);
+                CreateColdSweat.LOGGER.info("fluid {}", HeatUtils.getFluidDataTemp(level, new FluidStack(fluidState.getType(), 1000)));
+                targetTemperature = tempsFor == 0d ? (fluidState.isEmpty() ? 0d : HeatUtils.getFluidDataTemp(level, new FluidStack(fluidState.getType(), 1000))) : tempsFor + biomeTemperature;
+            }
+
+            targetTemperature = targetTemperature == 0d ? biomeTemperature : targetTemperature;
+            CreateColdSweat.LOGGER.info("target {}", targetTemperature);
             double playerTemperature = Temperature.get(livingEntity, Temperature.Trait.WORLD);
-            double generatedTemperature = getGeneratedTemperature(targetTemperature, playerTemperature, effectEfficiency);
-            return HeatUtils.blend(distance, generatedTemperature, (int) (encasedFan.getMaxDistance() + 0.5));
+            double difference = targetTemperature - playerTemperature;
+            double generated = effectEfficiency * difference;
+
+            // If x approaches 0 from the left, then the max is 0, if x approaches 0 from the right, then the min is 0
+            // This is so that it doesn't overshoot, a fan can't make you cooler than the surrounding air
+            double generatedTemperature = targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
+            generatedTemperature *= MathConstants.FAN_DAMPENER;
+
+//            return HeatUtils.blend(distance, generatedTemperature, (int) (encasedFan.getMaxDistance() + 0.5));
+            return generatedTemperature;
         }
 
         return 0d;
-    }
-
-    private static double getGeneratedTemperature(double targetTemperature, double playerTemperature, double effectEfficiency) {
-        double difference = targetTemperature - playerTemperature;
-        double generated = effectEfficiency * difference;
-
-        // If x approaches 0 from the left, then the max is 0, if x approaches 0 from the right, then the min is 0
-        // This is so that it doesn't overshoot, a fan can't make you cooler than the surrounding air
-        double generatedTemperature = targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
-        generatedTemperature = generatedTemperature * MathConstants.FAN_DAMPENER;
-        return generatedTemperature;
     }
 
     private static double getEffectEfficiency(EncasedFanBlockEntity encasedFan, double angle, double maxRadians) {
