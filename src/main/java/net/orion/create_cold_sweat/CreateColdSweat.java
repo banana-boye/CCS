@@ -10,12 +10,11 @@ import net.orion.create_cold_sweat.blocks.BlockRegister;
 import org.slf4j.Logger;
 
 @Mod(CreateColdSweat.MOD_ID)
-public class CreateColdSweat
-{
+public class CreateColdSweat {
     public static final String MOD_ID = "create_cold_sweat";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public CreateColdSweat () {
+    public CreateColdSweat() {
         IEventBus FORGE_EVENT_BUS = MinecraftForge.EVENT_BUS;
 
         LOGGER.info("Registering to events..");
