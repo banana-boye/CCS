@@ -23,7 +23,10 @@ import java.util.function.Function;
 
 public class HeatUtils {
 
-    public static final BiFunction<Double, Double, Double> fluidBlend = HeatUtils.createBlender(3);
+    public static BiFunction<Double, Double, Double> fluidBlend;
+    public static BiFunction<Double, Double, Double> blazeBlend;
+    public static BiFunction<Double, Double, Double> boilerBlend;
+    public static BiFunction<Double, Double, Double> steamEngineBlend;
 
     /**
      * Applies fluidBlend based off the distance to the container

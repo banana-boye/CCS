@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.MathConstants;
+import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class LitBlazeBurner extends BlockTemp {
@@ -21,6 +22,6 @@ public class LitBlazeBurner extends BlockTemp {
         boolean blazeBurnerTemperatureDisabled = !Config.CONFIG.blazeBurnerTemperature.get();
         if (blazeBurnerTemperatureDisabled || !this.hasBlock(blockState.getBlock())) return 0d;
 
-        return BlazeBurner.blazeBlend.apply(distance, MathConstants.ONE_CELSIUS_IN_MC_UNITS * 3);
+        return HeatUtils.blazeBlend.apply(distance, MathConstants.ONE_CELSIUS_IN_MC_UNITS * 3);
     }
 }

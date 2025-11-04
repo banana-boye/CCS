@@ -14,11 +14,7 @@ import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
-
 public class Boiler extends BlockTemp {
-
-    private static final BiFunction<Double, Double, Double> boilerBlend = HeatUtils.createBlender(8);
 
     public Boiler(Block... block) {
         super(block);
@@ -44,7 +40,7 @@ public class Boiler extends BlockTemp {
         // Calculate boiler blocks
         if (boilerTemperatureEnabled){
             // Checks if the fluid tank is an active boiler and calculates the value according to speed and other values
-            blockTemperature.set(HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> boilerBlend.apply(distance, temperature)));
+            blockTemperature.set(HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> HeatUtils.boilerBlend.apply(distance, temperature)));
             if (blockTemperature.get() != 0) return blockTemperature.get();
         }
 

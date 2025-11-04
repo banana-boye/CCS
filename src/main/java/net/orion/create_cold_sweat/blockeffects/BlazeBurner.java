@@ -12,11 +12,8 @@ import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.function.BiFunction;
 
 public class BlazeBurner extends BlockTemp {
-
-    public static final BiFunction<Double, Double, Double> blazeBlend = HeatUtils.createBlender(8);
 
     public BlazeBurner(Block... blocks) {
         super(blocks);
@@ -28,7 +25,7 @@ public class BlazeBurner extends BlockTemp {
         if (blazeBurnerTemperatureDisabled || !this.hasBlock(blockState.getBlock())) return 0d;
 
         return Arrays.stream(BlazeBurnerBlock.HeatLevel.values())
-            .map(hl -> isHeatLevel(blockState, hl) ? blazeBlend.apply(distance, switch (hl) {
+            .map(hl -> isHeatLevel(blockState, hl) ? HeatUtils.blazeBlend.apply(distance, switch (hl) {
                 case NONE -> 0d;
                 case SMOULDERING -> Config.CONFIG.bBSmouldering.get();
                 case FADING -> Config.CONFIG.bBFading.get();

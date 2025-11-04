@@ -76,7 +76,7 @@ public class EncasedFan extends BlockTemp {
             targetTemperature = targetTemperature == 0d ? biomeTemperature : targetTemperature;
             double playerTemperature = Temperature.get(livingEntity, Temperature.Trait.WORLD);
 
-            return HeatUtils.blend(distance, getGeneratedTemperature(targetTemperature, playerTemperature, effectEfficiency), (int) (encasedFan.getMaxDistance() + 0.5));
+            return HeatUtils.blend(distance, getGeneratedTemperature(targetTemperature, playerTemperature, effectEfficiency), Math.max((int) (encasedFan.getMaxDistance() + 0.5), Config.CONFIG.maxFanDistance.get()));
         }
 
         return 0d;

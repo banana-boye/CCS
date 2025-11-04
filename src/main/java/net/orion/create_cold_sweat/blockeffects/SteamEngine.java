@@ -11,10 +11,7 @@ import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
-
 public class SteamEngine extends BlockTemp {
-    private static final BiFunction<Double, Double, Double> steamEngineBlend = HeatUtils.createBlender(3);
 
     public SteamEngine(Block... blocks) {
         super(blocks);
@@ -29,6 +26,6 @@ public class SteamEngine extends BlockTemp {
             !(level.getBlockEntity(blockPos) instanceof SteamEngineBlockEntity blockEntity)
         ) return 0d;
 
-        return HeatUtils.calculateBoilerTemperature(blockEntity.getTank(), (Double temperature) -> steamEngineBlend.apply(distance, temperature));
+        return HeatUtils.calculateBoilerTemperature(blockEntity.getTank(), (Double temperature) -> HeatUtils.steamEngineBlend.apply(distance, temperature));
     }
 }
