@@ -31,6 +31,7 @@ public class BlockTempRegister {
     }
 
     public static void registerBlocksOfTag(BlockTempRegisterEvent blockTempRegisterEvent, TagKey<Block> tagKey, Function<Block, BlockTemp> blockTempSupplier) {
+        CreateColdSweat.LOGGER.info("tag {}", tagKey);
         TagUtils.getBlocksTaggedWith(tagKey).forEach(block -> {
             CreateColdSweat.LOGGER.info("Registering {} with tag {}", block.getName(), tagKey.toString());
             blockTempRegisterEvent.register(blockTempSupplier.apply(block));

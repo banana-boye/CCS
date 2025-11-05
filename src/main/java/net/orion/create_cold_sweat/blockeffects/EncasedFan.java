@@ -14,8 +14,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.orion.create_cold_sweat.Config;
+import net.orion.create_cold_sweat.CreateColdSweat;
 import net.orion.create_cold_sweat.MathConstants;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
@@ -61,7 +62,7 @@ public class EncasedFan extends BlockTemp {
 
                 // Get Temperature of max block in front
                 double tempForBlock = BlockTempRegistry.getBlockTempsFor(state)
-                        .stream().toList().get(0)
+                        .stream().toList().getFirst()
                         .getTemperature(level, null, state, offset, 0d);
 
                 // Get fluid state of block for in case there is no block temperature
@@ -96,7 +97,7 @@ public class EncasedFan extends BlockTemp {
     private static double getEffectEfficiency(EncasedFanBlockEntity encasedFan, double angle, double maxRadians) {
         double angleDifference = Math.abs(angle - maxRadians);
         double unitAngleDifference = angleDifference / maxRadians;
-        float unitSpeed = encasedFan.getSpeed() / 256;
+        float unitSpeed = Math.abs(encasedFan.getSpeed()) / 256;
 
         // Unit percentage of temperature effect on the player
         // The angle affects half and so does the speed

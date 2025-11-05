@@ -21,8 +21,9 @@ public class FluidContainers extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
+        boolean liquidTemperatureDisabled = !Config.CONFIG.liquidTemperature.get();
         if(
-            !Config.CONFIG.liquidTemperature.get() ||
+            liquidTemperatureDisabled ||
             !(level.getBlockEntity(blockPos) instanceof SmartBlockEntity blockEntity) ||
             !(Capabilities.FluidHandler.BLOCK.getCapability(level, blockPos, blockState, blockEntity, null) instanceof IFluidHandler fluidHandler)
         ) return 0d;
