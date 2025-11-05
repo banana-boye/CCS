@@ -10,8 +10,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 @Mod(CreateColdSweat.MOD_ID)
-public class CreateColdSweat
-{
+public class CreateColdSweat {
     public static final String MOD_ID = "create_cold_sweat";
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -21,7 +20,6 @@ public class CreateColdSweat
         LOGGER.info("Registering to events..");
 
         NEO_FORGE_EVENT_BUS.addListener(BlockTempRegisterEvent.class, BlockTempRegister::register);
-//        BlockRegister.register(NEO_FORGE_EVENT_BUS);
 
         container.registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
 

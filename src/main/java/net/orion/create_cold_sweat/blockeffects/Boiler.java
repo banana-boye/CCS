@@ -14,11 +14,7 @@ import net.orion.create_cold_sweat.Config;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
-
 public class Boiler extends BlockTemp {
-
-    private static final BiFunction<Double, Double, Double> boilerBlend = HeatUtils.createBlender(8);
 
     public Boiler(Block... block) {
         super(block);
@@ -27,13 +23,23 @@ public class Boiler extends BlockTemp {
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
-        if ((!Config.CONFIG.boilerTemperature.get() && !Config.CONFIG.liquidTemperature.get()) || !this.hasBlock(blockState.getBlock()) || !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)) return 0d;
+        // Whether configs disabled this feature
+        Boolean liquidTemperatureEnabled = Config.CONFIG.liquidTemperature.get();
+        Boolean boilerTemperatureEnabled = Config.CONFIG.boilerTemperature.get();
+        boolean configDisabled = !boilerTemperatureEnabled && !liquidTemperatureEnabled;
+        boolean doesNotHaveBlock = !this.hasBlock(blockState.getBlock());
+
+        if (
+            configDisabled ||
+            doesNotHaveBlock ||
+            !(level.getBlockEntity(blockPos) instanceof FluidTankBlockEntity fluidTankBlockEntity)
+        ) return 0d;
 
         double blockTemperature = 0d;
 
         // Calculate boiler blocks
         if (Config.CONFIG.boilerTemperature.get()){
-            blockTemperature = HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> boilerBlend.apply(distance, temperature));
+            blockTemperature = HeatUtils.calculateBoilerTemperature(fluidTankBlockEntity, (Double temperature) -> HeatUtils.boilerBlend.apply(distance, temperature));
             if (blockTemperature != 0) return blockTemperature;
         }
 

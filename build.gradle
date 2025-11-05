@@ -3,6 +3,10 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.3"
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
     id 'net.neoforged.gradle.userdev' version '7.0.170'
 }
 
@@ -13,15 +17,12 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
-repositories {
-    mavenLocal()
-}
-
 base {
     archivesName = mod_id
 }
 
 repositories {
+    mavenLocal()
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://mvn.devos.one/snapshots" } // Registrate
     maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // ForgeConfigAPIPort
@@ -118,5 +119,42 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+publishMods {
+    file = jar.archiveFile
+    changelog = file("CHANGELOG.md").text
+    type = STABLE
+    modLoaders.add("forge")
+
+    curseforge {
+        projectId = "1184450"
+        projectSlug = "create-cold-sweat"
+        accessToken = providers.gradleProperty("CURSEFORGE_TOKEN")
+        minecraftVersions.add("1.20.1")
+        minecraftVersions.add("1.20.2")
+        minecraftVersions.add("1.20.3")
+        minecraftVersions.add("1.20.4")
+        minecraftVersions.add("1.20.5")
+        minecraftVersions.add("1.20.6")
+        requires("create")
+        requires("cold-sweat")
+    }
+    modrinth {
+        projectId = "Arx7g8V4"
+        accessToken = providers.gradleProperty("MODRINTH_TOKEN")
+        minecraftVersions.add("1.20.1")
+        minecraftVersions.add("1.20.2")
+        minecraftVersions.add("1.20.3")
+        minecraftVersions.add("1.20.4")
+        minecraftVersions.add("1.20.5")
+        minecraftVersions.add("1.20.6")
+    }
+    discord {
+        webhookUrl = providers.gradleProperty("WEBHOOK_TOKEN")
+        username = "StarWorks Mods"
+        avatarUrl = "https://cdn.discordapp.com/icons/1376617717846638703/2119cf72f3d468a689199b0979544cb5.png?size=80&quality=lossless"
+        content = changelog + "\n <@&\"1380077409591758928\">"
     }
 }

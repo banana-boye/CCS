@@ -16,6 +16,7 @@ public class TagUtils {
     public static final TagKey<Block> BOILER = blockTag("fluid_tank_block");
     public static final TagKey<Block> STEAM_ENGINE = blockTag("steam_engine_block");
     public static final TagKey<Block> BLAZE_BURNER = blockTag("blaze_burner_block");
+    public static final TagKey<Block> ENCASED_FAN = blockTag("encased_fan");
 
     public static TagKey<Block> blockTag(String name) {
         return BlockTags.create(ResourceLocation.fromNamespaceAndPath(CreateColdSweat.MOD_ID, name));
