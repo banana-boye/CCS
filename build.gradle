@@ -167,5 +167,8 @@ publishMods {
     }
     discord {
         webhookUrl = providers.gradleProperty("WEBHOOK_TOKEN")
+        username = "StarWorks Mods"
+        avatarUrl = "https://cdn.discordapp.com/icons/1376617717846638703/2119cf72f3d468a689199b0979544cb5.png?size=80&quality=lossless"
+        content = changelog + "\n <@&\"1380077409591758928\">"
     }
 }
