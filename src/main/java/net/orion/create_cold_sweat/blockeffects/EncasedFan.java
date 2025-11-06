@@ -116,7 +116,7 @@ public class EncasedFan extends BlockTemp {
         double combinedEfficiency = 1 - Math.exp(-totalEfficiency);
 
         // --- Step 3: Apply generation ---
-        return getGeneratedTemperature(averageTargetTemp, playerTemperature, combinedEfficiency);
+        return HeatUtils.blend(distance, getGeneratedTemperature(averageTargetTemp, playerTemperature, combinedEfficiency), Config.CONFIG.maxFanDistance.get());
 
     }
 
