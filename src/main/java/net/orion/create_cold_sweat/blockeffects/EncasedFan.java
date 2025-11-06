@@ -3,6 +3,7 @@ package net.orion.create_cold_sweat.blockeffects;
 import com.momosoftworks.coldsweat.api.registry.BlockTempRegistry;
 import com.momosoftworks.coldsweat.api.temperature.block_temp.BlockTemp;
 import com.momosoftworks.coldsweat.api.util.Temperature;
+import com.momosoftworks.coldsweat.config.ConfigSettings;
 import com.momosoftworks.coldsweat.util.world.WorldHelper;
 import com.simibubi.create.content.kinetics.fan.EncasedFanBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -16,16 +17,19 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.orion.create_cold_sweat.Config;
-import net.orion.create_cold_sweat.CreateColdSweat;
-import net.orion.create_cold_sweat.MathConstants;
 import net.orion.create_cold_sweat.utils.HeatUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 public class EncasedFan extends BlockTemp {
 
     public EncasedFan(Block... blocks) {
         super(blocks);
     }
+
+    public static final Map<LivingEntity, Set<EncasedFanBlockEntity>> fanMap = new HashMap<>();
+    int ticking = 0;
 
     @Override
     public double getTemperature(Level level, @Nullable LivingEntity livingEntity, BlockState blockState, BlockPos blockPos, double distance) {
@@ -39,7 +43,9 @@ public class EncasedFan extends BlockTemp {
             livingEntity == null
         ) return 0d;
 
-        if (encasedFan.getSpeed() == 0) return 0d;
+        float speed = encasedFan.getSpeed();
+        if (speed == 0 || ticking++ != 60) return 0d;
+        ticking = 0;
 
         Vec3 entityPosition = livingEntity.position();
 
@@ -49,38 +55,69 @@ public class EncasedFan extends BlockTemp {
         // Yes I know I could've asked for radians instead but degrees is just more readable, come on
         double maxRadians = Math.toRadians(Config.CONFIG.maximumFanAngle.get());
 
-        if (angle <= maxRadians) {
-            // Efficiency
-            double effectEfficiency = getEffectEfficiency(encasedFan, angle, maxRadians);
-            double targetTemperature = 0;
-            double biomeTemperature = WorldHelper.getBiomeTemperature(level, level.getBiome(blockPos));
+        if (angle > maxRadians)
+            return 0d;
 
-            if (Config.CONFIG.fanTemperatureInteraction.get()){
-                // Position in front of the block
-                BlockPos offset = blockPos.offset(facing.getNormal());
+        fanMap.computeIfAbsent(livingEntity, e -> new HashSet<>());
+        Set<EncasedFanBlockEntity> fans = fanMap.get(livingEntity);
+        fans.add(encasedFan);
+
+        int blockRange = ConfigSettings.BLOCK_RANGE.get() == null ? 16 : ConfigSettings.BLOCK_RANGE.get();
+        int maxFanDistance = Config.CONFIG.maxFanDistance.get();
+        int maxDistance = Math.min(maxFanDistance, blockRange);
+        int maxDistanceSqr = maxDistance * maxDistance;
+
+        // Remove old fans
+        fans.removeIf(fan -> fan.getBlockPos().distSqr(livingEntity.blockPosition()) > maxDistanceSqr);
+
+        double biomeTemperature = WorldHelper.getBiomeTemperature(level, level.getBiome(blockPos));
+        double playerTemperature = Temperature.get(livingEntity, Temperature.Trait.WORLD);
+
+        boolean fanTemperatureInteraction = Config.CONFIG.fanTemperatureInteraction.get();
+
+        // --- Step 1: Calculate combined target temperature ---
+        double totalTargetTemp = 0;
+        int contributingFans = 0;
+
+        for (EncasedFanBlockEntity fan : fans) {
+            Direction fanFacing = fan.getBlockState().getValue(BlockStateProperties.FACING);
+
+            double fanTargetTemp = biomeTemperature;
+
+            if (fanTemperatureInteraction) {
+                BlockPos offset = fan.getBlockPos().offset(fanFacing.getNormal());
                 BlockState state = level.getBlockState(offset);
 
-                // Get Temperature of max block in front
                 double tempForBlock = BlockTempRegistry.getBlockTempsFor(state)
-                        .stream().toList().getFirst()
-                        .getTemperature(level, null, state, offset, 0d);
+                        .stream().findFirst().map(temp -> temp.getTemperature(level, null, state, offset, 0d)).orElse(0d);
 
-                // Get fluid state of block for in case there is no block temperature
                 FluidState fluidState = level.getFluidState(offset);
-                double fluidStateTemperature = fluidState.isEmpty() ? 0d : HeatUtils.getFluidDataTemp(level, new FluidStack(fluidState.getType(), 1000));
+                double fluidTemp = fluidState.isEmpty() ? 0d : HeatUtils.getFluidDataTemp(level, new FluidStack(fluidState.getType(), 1000));
 
-                // If there is no block temperature, use the fluidState temperature
-                // If using the block temperature add the biome temp
-                targetTemperature = tempForBlock == 0d ? fluidStateTemperature : tempForBlock + biomeTemperature;
+                // Add either block or fluid temperature on top of biome
+                fanTargetTemp += tempForBlock == 0d ? fluidTemp : tempForBlock;
             }
 
-            targetTemperature = targetTemperature == 0d ? biomeTemperature : targetTemperature;
-            double playerTemperature = Temperature.get(livingEntity, Temperature.Trait.WORLD);
-
-            return HeatUtils.blend(distance, getGeneratedTemperature(targetTemperature, playerTemperature, effectEfficiency), Math.max((int) (encasedFan.getMaxDistance() + 0.5), Config.CONFIG.maxFanDistance.get()));
+            totalTargetTemp += fanTargetTemp;
+            contributingFans++;
         }
 
-        return 0d;
+        double averageTargetTemp = contributingFans == 0 ? biomeTemperature : totalTargetTemp / contributingFans;
+
+        // --- Step 2: Calculate combined efficiency ---
+        double totalEfficiency = fans.stream()
+            .mapToDouble(fan -> getEffectEfficiency(
+                fan.getSpeed(),
+                getAngleFromFront(fan.getBlockPos(), fan.getBlockState().getValue(BlockStateProperties.FACING), entityPosition),
+                maxRadians
+            ))
+            .sum();
+
+        double combinedEfficiency = 1 - Math.exp(-totalEfficiency);
+
+        // --- Step 3: Apply generation ---
+        return HeatUtils.blend(distance, getGeneratedTemperature(averageTargetTemp, playerTemperature, combinedEfficiency), Config.CONFIG.maxFanDistance.get());
+
     }
 
     private static double getGeneratedTemperature(double targetTemperature, double playerTemperature, double effectEfficiency) {
@@ -89,15 +126,13 @@ public class EncasedFan extends BlockTemp {
 
         // If x approaches 0 from the left, then the max is 0, if x approaches 0 from the right, then the min is 0
         // This is so that it doesn't overshoot, a fan can't make you cooler than the surrounding air
-        double generatedTemperature = targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
-        generatedTemperature *= MathConstants.FAN_DAMPENER;
-        return generatedTemperature;
+        return targetTemperature > playerTemperature ? Math.max(0, generated) : Math.min(0, generated);
     }
 
-    private static double getEffectEfficiency(EncasedFanBlockEntity encasedFan, double angle, double maxRadians) {
+    private static double getEffectEfficiency(float speed, double angle, double maxRadians) {
         double angleDifference = Math.abs(angle - maxRadians);
         double unitAngleDifference = angleDifference / maxRadians;
-        float unitSpeed = Math.abs(encasedFan.getSpeed()) / 256;
+        float unitSpeed = Math.abs(speed) / 256;
 
         // Unit percentage of temperature effect on the player
         // The angle affects half and so does the speed
