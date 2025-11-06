@@ -55,7 +55,7 @@ public class EncasedFan extends BlockTemp {
         // Yes I know I could've asked for radians instead but degrees is just more readable, come on
         double maxRadians = Math.toRadians(Config.CONFIG.maximumFanAngle.get());
 
-        if (angle > maxRadians)
+        if (angle > maxRadians || distance > Config.CONFIG.maxFanDistance.get())
             return 0d;
 
         fanMap.computeIfAbsent(livingEntity, e -> new HashSet<>());
