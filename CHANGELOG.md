@@ -1,6 +1,7 @@
-# Create: Cold Sweat 1.1.1 - 1.20.1
-### Fan Patch
-- Fixed Fan slingshot bug
-- Optimized Fan heating
+# Create: Cold Sweat 1.1.2 - 1.20.1
+### Server Patch
+- Patched server crashing on boot 
+- Added some more description to the mod too
+- Fixed mod logo on neoforge
 
-Goodness gracious talk about complicated
+Remember kids, test the serverside too, ya never know what might pop up..
