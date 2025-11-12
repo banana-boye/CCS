@@ -124,30 +124,20 @@ publishMods {
     file = jar.archiveFile
     changelog = file("CHANGELOG.md").text
     type = STABLE
-    modLoaders.add("forge")
+    modLoaders.add("neoforge")
 
     curseforge {
         projectId = "1184450"
         projectSlug = "create-cold-sweat"
         accessToken = providers.gradleProperty("CURSEFORGE_TOKEN")
-        minecraftVersions.add("1.20.1")
-        minecraftVersions.add("1.20.2")
-        minecraftVersions.add("1.20.3")
-        minecraftVersions.add("1.20.4")
-        minecraftVersions.add("1.20.5")
-        minecraftVersions.add("1.20.6")
+        minecraftVersions.add("1.21.1")
         requires("create")
         requires("cold-sweat")
     }
     modrinth {
         projectId = "Arx7g8V4"
         accessToken = providers.gradleProperty("MODRINTH_TOKEN")
-        minecraftVersions.add("1.20.1")
-        minecraftVersions.add("1.20.2")
-        minecraftVersions.add("1.20.3")
-        minecraftVersions.add("1.20.4")
-        minecraftVersions.add("1.20.5")
-        minecraftVersions.add("1.20.6")
+        minecraftVersions.add("1.21.1")
     }
     discord {
         webhookUrl = providers.gradleProperty("WEBHOOK_TOKEN")
